@@ -38,11 +38,9 @@ public class UserController {
     public String addUser(@ModelAttribute("user") User user, @PathVariable("id") long id){
         if(id == 0) {
             userService.addUser(user);
-            System.out.println("Добавить");
         } else {
             user.setId(id);
             userService.updateUser(user);
-            System.out.println("Изменить");
         }
         return "redirect:/users";
     }
