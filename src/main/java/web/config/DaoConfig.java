@@ -45,10 +45,10 @@ public class DaoConfig {
     @Bean("entityManager")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setJpaVendorAdapter(getJpaVendorAdapter());
         em.setDataSource(dataSource());
-        em.setPackagesToScan(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN );
-        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        em.setJpaVendorAdapter(vendorAdapter);
+        em.setPersistenceUnitName("myJpaPersistenceUnit");
+        em.setPackagesToScan(environment.getRequiredProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN) );
         em.setJpaProperties(hibernateProperties());
         return em;
     }

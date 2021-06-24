@@ -9,54 +9,55 @@ import org.springframework.web.bind.annotation.*;
 import web.model.User;
 import web.service.UserService;
 
-import java.util.List;
 
 @Controller
 public class UserController {
-    private static UserService userService;
+    private UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public void setUserService(UserService userService){
         this.userService = userService;
     }
 
-    @GetMapping(value = "users")
-    public String printUserList(Model model) {
-
+    @GetMapping("/users")
+    public String allUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("user", new User());
-        List<User> list =  userService.getAllUsers();
-        model.addAttribute("listUsers", list);
-
         return "users";
     }
 
-    @PostMapping (value = "/users/add")
-    public String addUser(@ModelAttribute("user") User user) {
-        if (user.getId() == 0) {
-            userService.addUser(user);
-        } else {
-            userService.updateUser(user);
-        }
-        return "redirect:/users";
-    }
 
-    @DeleteMapping("/remove/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+    @GetMapping("/remove/{id}")
+    public String delete(@PathVariable("id") long id){
         userService.deleteUser(id);
         return "redirect:/users";
     }
 
-    @PatchMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") long id, Model model) {
+
+    @PostMapping(value = "/users/addUser/{id}")
+    public String addUser(@ModelAttribute("user") User user, @PathVariable("id") long id){
+        if(id == 0) {
+            userService.addUser(user);
+            System.out.println("Добавить");
+        } else {
+            user.setId(id);
+            userService.updateUser(user);
+            System.out.println("Изменить");
+        }
+        return "redirect:/users";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editUser(@PathVariable("id") long id, Model model) {
         model.addAttribute("user", userService.getUser(id));
         model.addAttribute("listUsers", userService.getAllUsers());
         return "users";
     }
 
-    @GetMapping("/userdata/{id}")
-    public String userData(@PathVariable("id") long id, Model model) {
+    @GetMapping("/users/{id}")
+    public String getById(@PathVariable("id") long id, Model model){
         model.addAttribute("user", userService.getUser(id));
-        return "userdata";
+        return "/userdata";
     }
 }
 
