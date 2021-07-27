@@ -1,19 +1,27 @@
 package web.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import web.dao.RoleDao;
 import web.dao.UserDao;
+import web.model.Role;
 import web.model.User;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService{
 
-    static UserDao userDao;
-
-    public UserServiceImpl(UserDao userDao) {
+    private UserDao userDao;
+    private RoleDao roleDao;
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
+        this.roleDao = roleDao;
     }
 
     @Override
@@ -31,6 +39,9 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void addUser(User user) {
+        Set<Role> role = new HashSet<Role>();
+        role.add(roleDao.getRoleUser());
+        user.setRoles(role);
         userDao.addUser(user);
     }
 
@@ -45,4 +56,14 @@ public class UserServiceImpl implements UserService{
     public void deleteUser(long id) {
         userDao.deleteUser(id);
     }
+    @Override
+    public User getByLogin(String login) {
+        return userDao.getByLogin(login);
+    }
+
+    @Override
+    public User loadUserByUsername(String s) {
+        return userDao.loadUserByUsername(s);
+    }
+
 }

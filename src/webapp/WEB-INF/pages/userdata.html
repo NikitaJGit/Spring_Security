@@ -48,13 +48,13 @@
 
 <table class="tg">
   <tr>
-    <th width="80">ID</th>
-    <th width="120">Title</th>
-    <th width="120">Author</th>
-    <th width="120">Price</th>
+    <th width="120">Login</th>
+    <th width="120">Name</th>
+    <th width="120">Surname</th>
+    <th width="120">Email</th>
   </tr>
   <tr>
-    <td th:text="${user.getId()}"></td>
+    <td th:text="${user.getUsername()}"></td>
     <td th:text="${user.getName()}"></td>
     <td th:text="${user.getSurname()}"></td>
     <td th:text="${user.getEmail()}"></td>
@@ -62,6 +62,6 @@
 
 </table>
 <br/>
-<a href="/users">Back</a>
+<a href="/logout">Exit</a>
 </body>
 </html>
